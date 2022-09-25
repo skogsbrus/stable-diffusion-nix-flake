@@ -20,22 +20,23 @@
 
             # Enable CUDA for pytorch only, not for OpenCV, sklearn, etc.
             # TODO: doesn't work :(
-            overlays = [
-              (self: super: rec {
-                python3 = super.python3.override {
-                  packageOverrides = self: super: {
-                    pytorch = super.python3.pkgs.pytorch.overrideAttrs {
-                      cudaSupport = true;
-                    };
-                    pytorch-lightning = super.python3.pkgs.pytorch-lightning.overrideAttrs {
-                      cudaSupport = true;
-                    };
-                  };
-                };
-                pythonPackages = python3.pkgs;
-                python310Packages = python3.pkgs;
-              })
-            ];
+            #overlays = [
+            #  (self: super: rec {
+            #    python3 = super.python3.override {
+            #      packageOverrides = self: super: {
+            #        pytorch = super.pytorch.overrideAttrs {
+            #          cudaSupport = true;
+            #        };
+            #        pytorch-lightning = super.pytorch-lightning.overrideAttrs {
+            #          cudaSupport = true;
+            #        };
+            #      };
+            #    };
+            #    pythonPackages = python3.pkgs;
+            #    python39Packages = python3.pkgs;
+            #    python310Packages = python3.pkgs;
+            #  })
+            #];
           };
 
           inherit (pkgs.python310.pkgs) buildPythonPackage fetchPypi;
@@ -234,6 +235,7 @@
               numpy
               omegaconf
               opencv4
+              pip
               pudb
               pytorch
               pytorch-lightning
@@ -259,6 +261,12 @@
 
                 export PYTHONPATH=$(pwd):$PYTHONPATH
                 export CUDA_PATH=${pkgs.cudatoolkit_11}
+
+                # HACK: einops depends on chainer which in turn depends on
+                # cupy. When enabling CUDA support for all packages, cupy will
+                # fail to compile (and it is marked as broken upstream)
+                # As a workaround, we install it in the hook instead
+                pip install einops --target .
 
                 echo "Don't forget to symlink the model weights as described in https://github.com/basujindal/stable-diffusion"
                 echo "Happy painting!"

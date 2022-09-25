@@ -26,3 +26,13 @@ Note that it will take a long time to build packages that use CUDA (opencv, torc
 
 ### Creating images
 
+```
+python3 optimizedSD/optimized_txt2img.py --H 540 --W 960 --n_iter 1 --n_samples 4 --ddim_steps 50 --prompt "A young man sitting on the floor with his computer, a small messy apartment with dirty laundry and dishes, anime 8K miyasaki ghibli"
+```
+
+![An image generated with stable diffusion](./splash.png)
+
+For further instructions, see:
+
+- https://github.com/basujindal/stable-diffusion
+- https://github.com/CompVis/stable-diffusion
