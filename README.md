@@ -6,6 +6,7 @@
 ## TODOs
 
 - enable CUDA support for pytorch only, to avoid long build times and broken `cupy` package.
+- add gradio
 
 ## Usage
 
