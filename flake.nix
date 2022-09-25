@@ -18,6 +18,7 @@
             config.allowUnfree = true;
 
             # Enable CUDA for pytorch only, not for OpenCV, sklearn, etc.
+            # TODO: doesn't work :(
             overlays = [
               (self: super: rec {
                 python3 = super.python3.override {
