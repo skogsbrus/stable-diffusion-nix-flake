@@ -20,17 +20,18 @@
             # Enable CUDA for pytorch only, not for OpenCV, sklearn, etc.
             overlays = [
               (self: super: rec {
-                python = super.python.override {
+                python3 = super.python3.override {
                   packageOverrides = self: super: {
-                    pytorch = super.python.pkgs.pytorch.overrideAttrs {
+                    pytorch = super.python3.pkgs.pytorch.overrideAttrs {
                       cudaSupport = true;
                     };
-                    pytorch-lightning = super.python.pkgs.pytorch-lightning.overrideAttrs {
+                    pytorch-lightning = super.python3.pkgs.pytorch-lightning.overrideAttrs {
                       cudaSupport = true;
                     };
                   };
                 };
-                pythonPackages = python.pkgs;
+                pythonPackages = python3.pkgs;
+                python310Packages = python3.pkgs;
               })
             ];
           };
