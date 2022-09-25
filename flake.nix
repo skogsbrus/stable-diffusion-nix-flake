@@ -16,7 +16,20 @@
             inherit system;
             # Allow NVIDIA stuff
             config.allowUnfree = true;
-            config.cudaSupport = true;
+
+            # Enable CUDA for pytorch only, not for OpenCV, sklearn, etc.
+            overlays = [
+              (self: super: rec {
+                python = super.python.override {
+                  packageOverrides = self: super: {
+                    torch = super.python.pkgs.torch.overrideAttrs {
+                      cudaSupport = true;
+                    };
+                  };
+                };
+                pythonPackages = python.pkgs;
+              })
+            ];
           };
           qudida = pkgs.python310.pkgs.buildPythonPackage
             rec {
