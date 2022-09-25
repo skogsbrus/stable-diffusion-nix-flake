@@ -31,7 +31,25 @@
               })
             ];
           };
-          qudida = pkgs.python310.pkgs.buildPythonPackage
+
+          inherit (pkgs.python310.pkgs) buildPythonPackage fetchPypi;
+          inherit (pkgs.python310.pkgs)
+            ftfy
+            numpy
+            omegaconf
+            opencv4
+            pytorch
+            pytorch-lightning
+            pyyaml
+            scikit-learn
+            scikitimage
+            scipy
+            torchvision
+            tqdm
+            typing-extensions
+            ;
+
+          qudida = buildPythonPackage
             rec {
               version = "0.0.4";
               pname = "qudida";
@@ -43,7 +61,7 @@
                 license = licenses.mit;
               };
 
-              buildInputs = with pkgs.python310.pkgs; [
+              buildInputs = [
                 numpy
                 opencv4
                 scikit-learn
@@ -65,28 +83,28 @@
                   --replace '"typing-extensions"' ""
               '';
 
-              src = pkgs.python310.pkgs.fetchPypi {
+              src = fetchPypi {
                 inherit pname version;
                 sha256 = "sha256-2xmOKIerDJqgAj5WWvv/Qd+3azYfhf1eE/eA11uhjMg=";
               };
             };
-          albumentations = pkgs.python310.pkgs.buildPythonPackage
+          albumentations = buildPythonPackage
             rec {
               version = "1.3.0";
               pname = "albumentations";
               format = "pyproject";
 
-              meta = with pkgs.lib; {
+              meta = {
                 description = "A Python library for image augmentation";
                 homepage = "https://github.com/albumentations-team/albumentations";
-                license = licenses.mit;
+                license = pkgs.lib.licenses.mit;
               };
 
-              buildInputs = with pkgs; [
-                python310.pkgs.scipy
-                python310.pkgs.numpy
-                python310.pkgs.pyyaml
-                python310.pkgs.scikitimage
+              buildInputs = [
+                scipy
+                numpy
+                pyyaml
+                scikitimage
                 qudida
               ];
 
@@ -98,24 +116,24 @@
                   --replace 'INSTALL_REQUIRES = [' 'INSTALL_REQUIRES = []; _ = ['
               '';
 
-              src = pkgs.python310.pkgs.fetchPypi {
+              src = fetchPypi {
                 inherit pname version;
                 sha256 = "sha256-vhrzaDLIiTMU8qVVDorBmAHgR3BzTBtw+jyZa0Hze+0=";
               };
             };
-          kornia = pkgs.python310.pkgs.buildPythonPackage
+          kornia = buildPythonPackage
             rec {
               version = "0.0.1";
               pname = "kornia";
               format = "pyproject";
 
-              meta = with pkgs.lib; {
+              meta = {
                 description = "Kornia is a differentiable computer vision library for PyTorch.";
-                license = licenses.asl20;
+                license = pkgs.lib.licenses.asl20;
               };
 
-              buildInputs = with pkgs; [
-                python310.pkgs.pytorch
+              buildInputs = [
+                pytorch
               ];
 
               installPhase = ''
@@ -144,11 +162,11 @@
                 license = licenses.mit;
               };
 
-              buildInputs = with pkgs; [
-                python310.pkgs.numpy
-                python310.pkgs.pytorch
-                python310.pkgs.pytorch-lightning
-                python310.pkgs.ftfy
+              buildInputs = [
+                numpy
+                pytorch
+                pytorch-lightning
+                ftfy
               ];
 
               installPhase = ''
@@ -177,12 +195,12 @@
               };
 
               buildInputs = with pkgs; [
-                python310.pkgs.numpy
-                python310.pkgs.omegaconf
-                python310.pkgs.pytorch
-                python310.pkgs.pytorch-lightning
-                python310.pkgs.torchvision
-                python310.pkgs.tqdm
+                numpy
+                omegaconf
+                pytorch
+                pytorch-lightning
+                torchvision
+                tqdm
               ];
 
               installPhase = ''
@@ -200,12 +218,10 @@
             };
         in
         {
-          #defaultPackage = stable-diffusion;
           devShell =
             let py = pkgs.python310.withPackages (p: with p; [
               albumentations
               clip
-              pkgs.cudatoolkit_11
               einops
               ftfy
               imageio
@@ -226,7 +242,7 @@
             in
             pkgs.mkShell {
               buildInputs = [
-                pkgs.fortune
+                pkgs.cudatoolkit_11
                 py
               ];
               shellHook = ''
