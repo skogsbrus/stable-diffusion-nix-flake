@@ -16,6 +16,7 @@
             inherit system;
             # Allow NVIDIA stuff
             config.allowUnfree = true;
+            config.cudaSupport = true;
 
             # Enable CUDA for pytorch only, not for OpenCV, sklearn, etc.
             # TODO: doesn't work :(
@@ -227,7 +228,6 @@
             let py = pkgs.python310.withPackages (p: with p; [
               albumentations
               clip
-              einops
               ftfy
               imageio
               kornia
