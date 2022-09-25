@@ -22,7 +22,10 @@
               (self: super: rec {
                 python = super.python.override {
                   packageOverrides = self: super: {
-                    torch = super.python.pkgs.torch.overrideAttrs {
+                    pytorch = super.python.pkgs.pytorch.overrideAttrs {
+                      cudaSupport = true;
+                    };
+                    pytorch-lightning = super.python.pkgs.pytorch-lightning.overrideAttrs {
                       cudaSupport = true;
                     };
                   };
